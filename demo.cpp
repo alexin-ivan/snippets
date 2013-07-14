@@ -19,6 +19,7 @@
 #include <boost/serialization/list.hpp>
 #include <boost/serialization/assume_abstract.hpp>
 #include <boost/serialization/split_member.hpp>
+#include <boost/serialization/split_free.hpp>
 #include <boost/serialization/string.hpp>
 #include <boost/serialization/shared_ptr.hpp>
 #include <boost/serialization/list.hpp>
@@ -247,15 +248,7 @@ class Node {
 		unsigned int number;
 		std::string name;
 		Position position;
-		friend boost::serialization::access;
 		friend boost::fusion::extension::access;
-		BOOST_SERIALIZATION_SPLIT_MEMBER()
-		template<typename Archive>
-			void save(Archive& ar, const unsigned int) const {
-				generic_save(ar,this);
-			}
-		template<typename Archive>
-			void load(Archive& ar, const unsigned int) {}
 };
 
 BOOST_FUSION_ADAPT_STRUCT(
@@ -324,6 +317,7 @@ struct ConvertSinglton {
 
 
 namespace boost { namespace serialization {
+
 
 template<typename Archive, typename Class, typename Member>
 struct _LoaderSpec {
@@ -454,10 +448,21 @@ void generic_load(Archive& ar, sequence* v) {
 }
 
 template<typename Archive>
+	void save(Archive& ar, const Node& that, const unsigned int) {
+		generic_save(ar,&that);
+	}
+template<typename Archive>
+	void load(Archive& ar, Node& that, const unsigned int) {
+	}
+
+template<typename Archive>
 	void load_construct_data(Archive& ar, Node* that, const unsigned int) {
 		generic_load(ar,that);
 	}
 }}//boost::serialization
+
+BOOST_SERIALIZATION_SPLIT_FREE(Node)
+
 
 typedef boost::shared_ptr<Node> NodePtr;
 
