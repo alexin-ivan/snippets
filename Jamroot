@@ -1,0 +1,17 @@
+project
+	: requirements <include>C:/libs/boost-msvc/include/boost-1_53/ <threading>multi
+	: requirements <library>C:/libs/boost-msvc/lib/libboost_serialization-vc90-mt-gd-1_53.lib
+	: requirements <library>C:/libs/boost/lib/libboost_serialization-mgw47-mt-d-1_53.a
+	;
+
+using gcc 
+	:
+	: 
+	: <cxxflags>-std=c++0x
+	;
+
+
+exe demo 
+	: demo.cpp
+	;
+
